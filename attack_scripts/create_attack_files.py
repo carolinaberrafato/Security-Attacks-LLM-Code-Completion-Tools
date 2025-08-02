@@ -42,7 +42,7 @@ def create_attack_files(excel_file: str):
 
 def main():
     # Modificar o nome do arquivo de acordo com o nome do arquivo de resultados
-    excel_file = "attack_results/attacks_20250802_185458.xlsx"
+    excel_file = "attacks_excels/attacks_20250802_191141.xlsx"
     
     try:
         output_dir = create_attack_files(excel_file)
