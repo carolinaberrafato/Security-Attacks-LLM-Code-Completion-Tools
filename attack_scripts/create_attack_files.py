@@ -30,12 +30,13 @@ def create_attack_files(excel_file: str):
     
     # Criar arquivos para cada linha
     for idx, row in df.iterrows():
-        # Arquivo para ataque nível 1
-        with open(os.path.join(output_dir, f"{idx}_level1.py"), 'w', encoding='utf-8') as f:
+        # Arquivo para ataque nível 1 
+        os.makedirs(os.path.join(output_dir, f"{idx}"))
+        with open(os.path.join(output_dir, f"{idx}", f"{idx}_level1.py"), 'w', encoding='utf-8') as f:
             f.write(row["Ataque Nível 1"])
         
         # Arquivo para ataque nível 2
-        with open(os.path.join(output_dir, f"{idx}_level2.py"), 'w', encoding='utf-8') as f:
+        with open(os.path.join(output_dir, f"{idx}", f"{idx}_level2.py"), 'w', encoding='utf-8') as f:
             f.write(row["Ataque Nível 2"])
     
     return output_dir
