@@ -81,48 +81,4 @@ for i in range(80):
         else:
             print(f"Arquivo não encontrado, pulando: {file_path}")
 
-
-'''
-                # Simul'a o atalho para abrir um arquivo (Ctrl+O)
-                pyautogui.hotkey('ctrl', 'o')
-                time.sleep(0.5)
-
-                # Escreve apenas o nome do arquivo, já que estamos no diretório correto
-                pyautogui.write(str(file_path))
-                pyautogui.press('enter')
-                
-                # Espera o arquivo carregar
-                time.sleep(30)
-
-                # Move o cursor para o final da linha
-                pyautogui.hotkey('ctrl', 'end')
-                time.sleep(0.5)
-
-                # Move um caractere para a esquerda
-                pyautogui.press('left')
-                time.sleep(0.5)
-                
-                pyautogui.press('space')
-                time.sleep(5)
-                pyautogui.press('tab')
-                time.sleep(5)
-
-                # Salva o arquivo (Ctrl+S)
-                pyautogui.hotkey('ctrl', 's')
-                time.sleep(0.5)
-
-                # Fecha o arquivo (Ctrl+W)
-                pyautogui.hotkey('ctrl', 'w')
-                time.sleep(0.5)
-
-                # Volta para o diretório original
-                os.chdir(diretorio_original)
-
-            except Exception as e:
-                print(f"Erro ao processar {file_path}: {str(e)}")
-                # Garante que voltamos ao diretório original mesmo em caso de erro
-                os.chdir(diretorio_original)
-        else:
-            print(f"Arquivo não encontrado, pulando: {file_path}")'''
-
 print("Automação finalizada com sucesso!")
