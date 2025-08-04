@@ -20,7 +20,7 @@ def create_attack_files(excel_file: str):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     
-    if not os.path.exists(output_dir + '//' +output_dir + f"_{timestamp}"):
+    if not os.path.exists(output_dir + '//' + output_dir + f"_{timestamp}"):
         os.makedirs(output_dir + '//' + output_dir + f"_{timestamp}")
 
     output_dir = output_dir + '//' + output_dir + f"_{timestamp}"
@@ -31,19 +31,22 @@ def create_attack_files(excel_file: str):
     # Criar arquivos para cada linha
     for idx, row in df.iterrows():
         # Arquivo para ataque nível 1 
-        os.makedirs(os.path.join(output_dir, f"{idx}"))
-        with open(os.path.join(output_dir, f"{idx}", f"{idx}_level1.py"), 'w', encoding='utf-8') as f:
+        #os.makedirs(os.path.join(output_dir, f"{idx}"))
+        os.makedirs(os.path.join(output_dir, f"{idx}_1"))
+        os.makedirs(os.path.join(output_dir, f"{idx}_2"))
+
+        with open(os.path.join(output_dir, f"{idx}_1", f"{idx}_1.py"), 'w', encoding='utf-8') as f:
             f.write(row["Ataque Nível 1"])
         
         # Arquivo para ataque nível 2
-        with open(os.path.join(output_dir, f"{idx}", f"{idx}_level2.py"), 'w', encoding='utf-8') as f:
+        with open(os.path.join(output_dir, f"{idx}_2", f"{idx}_2.py"), 'w', encoding='utf-8') as f:
             f.write(row["Ataque Nível 2"])
     
     return output_dir
 
 def main():
     # Modificar o nome do arquivo de acordo com o nome do arquivo de resultados
-    excel_file = "attacks_excels/attacks_20250802_191141.xlsx"
+    excel_file = "attacks_excels/attacks_20250803_150922.xlsx"
     
     try:
         output_dir = create_attack_files(excel_file)

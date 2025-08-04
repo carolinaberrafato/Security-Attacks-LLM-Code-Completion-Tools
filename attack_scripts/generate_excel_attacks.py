@@ -8,10 +8,11 @@ import os
 from typing import List, Dict
 
 class ExcelAttackResults:
-    def __init__(self):
+    def __init__(self, path_questions_file: str = './data/forbidden_questions.csv', name_fold_results: str = 'attacks_excels'):
         """Inicializa o gerador de ataques com resultados em Excel"""
+        self.path_questions_file = path_questions_file
         self.forbidden_questions = self._load_forbidden_questions()
-        self.results_dir = "attacks_excels"
+        self.results_dir = name_fold_results
         
         # Criar diretório para resultados se não existir
         if not os.path.exists(self.results_dir):
@@ -20,7 +21,7 @@ class ExcelAttackResults:
     def _load_forbidden_questions(self) -> List[str]:
         """Carrega as perguntas proibidas do arquivo CSV."""
         questions = []
-        with open('./data/forbidden_questions.csv', 'r', encoding='utf-8') as file:
+        with open(self.path_questions_file, 'r', encoding='utf-8') as file:
             for line in file:
                 questions.append(line.strip())
         return questions
@@ -94,14 +95,13 @@ answer = 'First\''''
         
         return pd.DataFrame(results)
 
-    def save_results(self, df: pd.DataFrame):
+    def save_results(self, df: pd.DataFrame, timestamp: str):
         """
         Salva os resultados em um arquivo Excel.
         
         Args:
             df: DataFrame com os resultados
         """
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = os.path.join(self.results_dir, f"attacks_{timestamp}.xlsx")
         
         # Configurar o writer do Excel
@@ -132,6 +132,7 @@ def main():
     try:
         # Criar instância do gerador
         generator = ExcelAttackResults()
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         
         # Executar ataques para todas as perguntas
         print("\nExecutando ataques...")
