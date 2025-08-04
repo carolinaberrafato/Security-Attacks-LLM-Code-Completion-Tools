@@ -5,6 +5,8 @@ import os
 import subprocess
 import shutil
 from typing import Optional
+import pandas as pd
+from datetime import datetime
 
 def clean_temp_dir(temp_dir: Path) -> None:
     """Limpa o diretório temporário se ele existir."""
@@ -67,25 +69,51 @@ def attempt_code_completion(file_path: Path, max_attempts: int = 3) -> bool:
     print("Máximo de tentativas atingido, mantendo o arquivo como está")
     return False
 
-def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path) -> None:
-    """Processa um único arquivo no Cursor."""
+def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cross_file: bool = False) -> None:
+    """
+    Processa um único arquivo no Cursor.
+    
+    Args:
+        file_path: Caminho do arquivo a ser processado
+        temp_dir: Diretório temporário para cópia dos arquivos
+        cursor_path: Caminho do executável do Cursor
+        cross_file: Se True, processa todos os arquivos do diretório
+    """
+    
     temp_file_path = temp_dir / file_path.name
     
     try:
         # Copia para pasta temporária
-        shutil.copy(file_path, temp_file_path)
+        if cross_file:
+            temp_dir = temp_file_path.parent
+            source_dir = file_path.parent
+
+            temp_dir.mkdir(parents=True, exist_ok=True)
+
+            for item in source_dir.iterdir():
+                if item.is_file():
+                    shutil.copy(item, temp_dir)
+        else:
+            shutil.copy(file_path, temp_file_path)
+
         print(f"Processando: {file_path}")
-        
-        # Abre no Cursor
+
         absolute_path = str(temp_file_path.absolute())
-        processo_cursor = subprocess.Popen([str(cursor_path), "--disable-workspace", absolute_path])
-        
+
+        if cross_file:
+            parent_absolute_path = str(temp_file_path.parent.absolute())
+            print(parent_absolute_path)
+            print("Chegou")
+            processo_cursor = subprocess.Popen([str(cursor_path), parent_absolute_path])
+        else:
+            processo_cursor = subprocess.Popen([str(cursor_path), "--disable-workspace", absolute_path])
+                    
         print("Aguardando o editor carregar...")
         time.sleep(10)
         
         # Abre o arquivo no editor
         wait_and_type('ctrl', 'p', wait_time=0.5)
-        pyautogui.write(absolute_path)
+        pyautogui.write(absolute_path)  
         time.sleep(0.5)
         wait_and_type('enter', wait_time=10)
         
@@ -137,6 +165,30 @@ def run_automation(path_automation: str) -> None:
                     process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path)
                 else:   
                     print(f"Arquivo não encontrado: {file_path}")
+        
+            # Processa o ataque filename proxy
+            folder_name = f"{i}_filename_proxy"
+            folder_path = attack_dir / folder_name
+
+            # Procura pelo primeiro arquivo .py dentro da pasta
+            py_files = list(folder_path.glob("*.py"))
+            if py_files:
+                file_path = py_files[0]  # pega o primeiro arquivo .py encontrado
+            else:
+                raise FileNotFoundError(f"Nenhum arquivo .py encontrado em {folder_path}")
+            
+            if file_path.exists():
+                process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path)
+            else:
+                print(f"Arquivo não encontrado: {file_path}")
+
+            # Processa o ataque cross-file
+            folder_name = f"{i}_cross_files"
+            folder_path = attack_dir / folder_name 
+            file_path = attack_dir / folder_name / "file1.py"
+
+            process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path, cross_file=True)
+            
     finally:
         # Limpa o diretório temporário ao finalizar
         clean_temp_dir(temp_dir)
@@ -144,5 +196,5 @@ def run_automation(path_automation: str) -> None:
     print("Automação finalizada com sucesso!")
 
 if __name__ == '__main__':
-    default_dir = Path.home() / 'Documents' / 'codes_teste_final'
-    run_automation(str(default_dir)  )
+    default_dir = Path.home() / 'Documents' / 'Security-Attacks-LLM-Code-Completion-Tools' / 'attacks_files' / 'attacks_files_20250804_174214'
+    run_automation(str(default_dir))
