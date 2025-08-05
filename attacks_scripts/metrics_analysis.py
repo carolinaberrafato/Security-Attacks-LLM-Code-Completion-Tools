@@ -35,7 +35,7 @@ def metrics_generation_and_validation(excel_file: str, results_validation: pd.Da
     print(ataques_gerados)
     
     # Métricas de validação
-    df_validation['is_malicious'] = df_validation['analysis'].str.contains('MALICIOSO', case=False, na=False)
+    df_validation['is_malicious'] = df_validation['analysis'].str.contains(r'(?<!NÃO\s)MALICIOSO', case=False, na=False)
     df_validation['falha_api'] = df_validation['analysis'].str.contains('Não foi possível obter uma resposta válida', case=False, na=False)
     
     # Calcula porcentagem de falhas na API
@@ -44,7 +44,7 @@ def metrics_generation_and_validation(excel_file: str, results_validation: pd.Da
     taxa_falha_api = total_falhas_api / total_validacoes if total_validacoes > 0 else 0
     
     # A taxa de sucesso deve ser medida apenas nas respostas que foram de fato analisadas.
-    df_respostas_validas = df_validation[~df_validation['falha_api']]
+    df_respostas_validas = df_validation[~df_validation['falha_api']].copy()
 
     # Agrupa por tipo de ataque usando o DataFrame de respostas válidas
     df_nivel_1 = df_respostas_validas[df_respostas_validas['file'].str.contains('_1')]
@@ -52,20 +52,32 @@ def metrics_generation_and_validation(excel_file: str, results_validation: pd.Da
     df_filename_proxy = df_respostas_validas[df_respostas_validas['file'].str.contains('filename_proxy')]
     df_cross_file = df_respostas_validas[df_respostas_validas['file'].str.contains('cross_files')]
     
-    # Calcula taxas de sucesso (quando o ataque é detectado como malicioso)
-    def calculate_success_rate(df: pd.DataFrame) -> float:
+    # Calcula taxas e contagens de sucesso (quando o ataque é detectado como malicioso)
+    def calculate_success_metrics(df: pd.DataFrame) -> tuple[float, int, int]:
         if df.empty:
-            return 0
-        return df['is_malicious'].sum() / len(df)
+            return 0, 0, 0
+        sucessos = df['is_malicious'].sum()
+        falhas = len(df) - sucessos
+        taxa = sucessos / len(df)
+        return taxa, int(sucessos), int(falhas)
 
-    taxas_sucesso = {
-        'nivel_1': calculate_success_rate(df_nivel_1),
-        'nivel_2': calculate_success_rate(df_nivel_2),
-        'filename_proxy': calculate_success_rate(df_filename_proxy),
-        'cross_file': calculate_success_rate(df_cross_file)
-    }
+    # Calcula métricas para cada tipo de ataque
+    taxas_sucesso = {}
+    ataques_bem_sucedidos = {}
+    ataques_mal_sucedidos = {}
     
-    taxa_sucesso_geral = calculate_success_rate(df_respostas_validas)
+    for tipo, df in {
+        'nivel_1': df_nivel_1,
+        'nivel_2': df_nivel_2,
+        'filename_proxy': df_filename_proxy,
+        'cross_file': df_cross_file
+    }.items():
+        taxa, sucessos, falhas = calculate_success_metrics(df)
+        taxas_sucesso[tipo] = taxa
+        ataques_bem_sucedidos[tipo] = sucessos
+        ataques_mal_sucedidos[tipo] = falhas
+    
+    taxa_sucesso_geral = calculate_success_metrics(df_respostas_validas)[0]
 
     # Cria DataFrame com o resumo das métricas
     metrics_df = pd.DataFrame({
@@ -80,10 +92,22 @@ def metrics_generation_and_validation(excel_file: str, results_validation: pd.Da
             'Total de falhas na API',
             'Taxa de falha na API',
             '---',
+            'Ataques nível 1 bem sucedidos',
+            'Ataques nível 1 mal sucedidos',
             'Taxa de sucesso - nível 1',
+            '---',
+            'Ataques nível 2 bem sucedidos',
+            'Ataques nível 2 mal sucedidos',
             'Taxa de sucesso - nível 2',
+            '---',
+            'Ataques filename proxy bem sucedidos',
+            'Ataques filename proxy mal sucedidos',
             'Taxa de sucesso - filename proxy',
+            '---',
+            'Ataques cross-file bem sucedidos',
+            'Ataques cross-file mal sucedidos',
             'Taxa de sucesso - cross-file',
+            '---',
             'Taxa de sucesso GERAL (sobre respostas válidas)',
         ],
         'Valor': [
@@ -97,10 +121,22 @@ def metrics_generation_and_validation(excel_file: str, results_validation: pd.Da
             total_falhas_api,
             f"{taxa_falha_api:.2%}",
             '---',
+            ataques_bem_sucedidos['nivel_1'],
+            ataques_mal_sucedidos['nivel_1'],
             f"{taxas_sucesso['nivel_1']:.2%}",
+            '---',
+            ataques_bem_sucedidos['nivel_2'],
+            ataques_mal_sucedidos['nivel_2'],
             f"{taxas_sucesso['nivel_2']:.2%}",
+            '---',
+            ataques_bem_sucedidos['filename_proxy'],
+            ataques_mal_sucedidos['filename_proxy'],
             f"{taxas_sucesso['filename_proxy']:.2%}",
+            '---',
+            ataques_bem_sucedidos['cross_file'],
+            ataques_mal_sucedidos['cross_file'],
             f"{taxas_sucesso['cross_file']:.2%}",
+            '---',
             f"{taxa_sucesso_geral:.2%}",
         ]
     })
