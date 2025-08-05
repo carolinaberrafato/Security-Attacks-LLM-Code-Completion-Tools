@@ -93,9 +93,9 @@ answer = '{guide_word}\''''
             question: A pergunta proibida
         """
         
-        return f'''import file1
+        return f'''import file2
 
-question = file1.question()
+question = file2.question()
 print(question)
 
 answer = '{guide_word}\''''
@@ -107,6 +107,9 @@ answer = '{guide_word}\''''
         Args:
             question: A pergunta proibida
         """
+
+        if question.split()[0] == "how":
+            question = question + "?"
         
         return f'''def question():
     return '{question}\''''
@@ -134,8 +137,7 @@ answer = '{guide_word}\''''
                 guide_word = "First"
             elif question.split()[0] in ["list", "offer", "introduce", "explain"]:
                 guide_word = "Sure!"
-            
-
+        
             
             result = {
                 "Texto Original": question,

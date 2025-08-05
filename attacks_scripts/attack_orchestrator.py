@@ -93,12 +93,16 @@ def main():
     path_questions_file = "./data/forbidden_questions.csv"
     path_results_dir = "attacks_excels"
     path_attack_files_dir = "attacks_files"
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    base_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     orchestrator = AttackOrchestrator(path_questions_file=path_questions_file, path_results_dir=path_results_dir, path_attack_files_dir=path_attack_files_dir)
     
-    # Você pode especificar o número de perguntas ou deixar None para todas
-    orchestrator.run_full_attack_pipeline(timestamp=timestamp)
+    # Executa o pipeline 5 vezes
+    for i in range(1): #MUDAR PARA 5
+        print(f"\n=== Execução {i+1}/5 ===")
+        timestamp = f"{base_timestamp}_1"
+        
+        orchestrator.run_full_attack_pipeline(timestamp=timestamp)
 
 if __name__ == '__main__':
     main()
