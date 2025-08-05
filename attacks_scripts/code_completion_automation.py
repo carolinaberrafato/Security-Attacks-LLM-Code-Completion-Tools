@@ -15,11 +15,14 @@ def clean_temp_dir(temp_dir: Path) -> None:
         print(f"Diretório temporário limpo: {temp_dir}")
 
 def read_last_line(file_path: Path) -> str:
-    """Lê a última linha de um arquivo."""
+    """
+    Lê a última linha não vazia de um arquivo.
+    Remove linhas que contêm apenas quebras de linha ou espaços.
+    """
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
-            lines = f.readlines()
-            return lines[-1].rstrip() if lines else ""
+            lines = [line.rstrip() for line in f.readlines() if line.strip()]
+            return lines[-1] if lines else ""
     except Exception as e:
         print(f"Erro ao ler arquivo {file_path}: {e}")
         return ""
@@ -32,7 +35,7 @@ def wait_and_type(*keys: str, wait_time: float = 0.5) -> None:
         pyautogui.hotkey(*keys)
     time.sleep(wait_time)
 
-def attempt_code_completion(file_path: Path, max_attempts: int = 3) -> bool:
+def attempt_code_completion(file_path: Path, max_attempts: int = 3, cross_file: bool = False) -> bool:
     """
     Tenta completar o código com o Cursor.
     
@@ -102,15 +105,24 @@ def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cros
 
         if cross_file:
             parent_absolute_path = str(temp_file_path.parent.absolute())
-            print(parent_absolute_path)
-            print("Chegou")
             processo_cursor = subprocess.Popen([str(cursor_path), parent_absolute_path])
         else:
             processo_cursor = subprocess.Popen([str(cursor_path), "--disable-workspace", absolute_path])
                     
         print("Aguardando o editor carregar...")
         time.sleep(10)
-        
+
+        if cross_file:
+            absolute_path_file2 = str(temp_file_path.parent.absolute()) + "/file2.py"
+            print(absolute_path_file2)
+            wait_and_type('ctrl', 'p', wait_time=0.5)
+            pyautogui.write(absolute_path_file2)  
+            time.sleep(0.5)
+            wait_and_type('enter')
+            processo_cursor = subprocess.Popen([str(cursor_path), parent_absolute_path])
+            time.sleep(0.5)
+            wait_and_type('ctrl', 'alt', 'b')
+
         # Abre o arquivo no editor
         wait_and_type('ctrl', 'p', wait_time=0.5)
         pyautogui.write(absolute_path)  
@@ -118,7 +130,7 @@ def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cros
         wait_and_type('enter', wait_time=10)
         
         # Tenta completar o código
-        attempt_code_completion(temp_file_path)
+        attempt_code_completion(temp_file_path, cross_file=cross_file)
         
         # Fecha e salva
         wait_and_type('alt', 'f4', wait_time=2)
@@ -163,6 +175,7 @@ def run_automation(path_automation: str) -> None:
                                 
                 if file_path.exists():
                     process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path)
+                    clean_temp_dir(temp_dir)
                 else:   
                     print(f"Arquivo não encontrado: {file_path}")
         
@@ -179,6 +192,7 @@ def run_automation(path_automation: str) -> None:
             
             if file_path.exists():
                 process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path)
+                clean_temp_dir(temp_dir)
             else:
                 print(f"Arquivo não encontrado: {file_path}")
 
@@ -188,6 +202,7 @@ def run_automation(path_automation: str) -> None:
             file_path = attack_dir / folder_name / "file1.py"
 
             process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path, cross_file=True)
+            clean_temp_dir(temp_dir)
             
     finally:
         # Limpa o diretório temporário ao finalizar
@@ -196,5 +211,5 @@ def run_automation(path_automation: str) -> None:
     print("Automação finalizada com sucesso!")
 
 if __name__ == '__main__':
-    default_dir = Path.home() / 'Documents' / 'Security-Attacks-LLM-Code-Completion-Tools' / 'attacks_files' / 'attacks_files_20250804_174214'
+    default_dir = Path.home() / 'Documents' / 'Security-Attacks-LLM-Code-Completion-Tools' / 'attacks_files' / 'attacks_files_20250804_221541_1'
     run_automation(str(default_dir))

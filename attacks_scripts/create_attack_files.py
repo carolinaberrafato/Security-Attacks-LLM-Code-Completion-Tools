@@ -49,7 +49,7 @@ def create_attack_files(excel_file: str, path_attacks_files: str ="attacks_files
             lines = row["Ataque Filename Proxy"].splitlines()[1:]
             f.write("\n".join(lines))
     
-        # Arquivo para ataque nível 2
+        # Arquivo para ataque cross-file
         with open(os.path.join(output_dir, f"{idx}_cross_files", f"file1.py"), 'w', encoding='utf-8') as f:
             f.write(row["Cross-File Attack (file1.py)"])
 
