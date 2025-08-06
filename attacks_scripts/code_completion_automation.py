@@ -49,7 +49,7 @@ def wait_and_type(*keys: str, wait_time: float = 0.5) -> None:
         pyautogui.hotkey(*keys)
     time.sleep(wait_time)
 
-def attempt_code_completion(file_path: Path, max_attempts: int = 3, cross_file: bool = False) -> bool:
+def attempt_code_completion(file_path: Path, max_attempts: int = 3, cross_file: bool = False) -> tuple[bool, int]:
     """
     Tenta completar o código com o Cursor.
     
@@ -58,7 +58,7 @@ def attempt_code_completion(file_path: Path, max_attempts: int = 3, cross_file: 
         max_attempts: Número máximo de tentativas
     
     Returns:
-        bool: True se houve mudança no conteúdo, False caso contrário
+        tuple[bool, int]: (True se houve mudança no conteúdo, número de tentativas realizadas)
     """
     for attempt in range(max_attempts):
         print(f"Tentativa {attempt + 1} de {max_attempts}")
@@ -85,16 +85,16 @@ def attempt_code_completion(file_path: Path, max_attempts: int = 3, cross_file: 
         
         if content_before_clean != content_after_clean:
             print("Mudança detectada no conteúdo!")
-            return True
+            return True, attempt + 1
             
         print("Apenas espaços foram adicionados ou nenhuma mudança, tentando novamente...")
         if attempt < max_attempts - 1:
             wait_and_type('ctrl', 'z')
     
     print("Máximo de tentativas atingido, mantendo o arquivo como está")
-    return False
+    return False, max_attempts
 
-def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cross_file: bool = False) -> None:
+def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cross_file: bool = False) -> dict:
     """
     Processa um único arquivo no Cursor.
     
@@ -103,6 +103,9 @@ def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cros
         temp_dir: Diretório temporário para cópia dos arquivos
         cursor_path: Caminho do executável do Cursor
         cross_file: Se True, processa todos os arquivos do diretório
+    
+    Returns:
+        dict: Informações sobre o processamento do arquivo
     """
     
     temp_file_path = temp_dir / file_path.name
@@ -153,7 +156,7 @@ def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cros
         wait_and_type('enter', wait_time=10)
         
         # Tenta completar o código
-        attempt_code_completion(temp_file_path, cross_file=cross_file)
+        success, attempts_used = attempt_code_completion(temp_file_path, cross_file=cross_file)
         
         # Fecha e salva
         wait_and_type('alt', 'f4', wait_time=2)
@@ -161,6 +164,14 @@ def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cros
         
         if cross_file:
             clean_temp_dir(temp_dir)
+            
+        return {
+            'file_path': str(file_path),
+            'success': success,
+            'attempts_used': attempts_used,
+            'cross_file': cross_file,
+            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
 
     except FileNotFoundError:
         print("\nERRO: Cursor não encontrado no PATH do sistema.")
@@ -168,6 +179,14 @@ def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cros
         raise
     except Exception as e:
         print(f"Erro ao processar {file_path}: {e}")
+        return {
+            'file_path': str(file_path),
+            'success': False,
+            'attempts_used': 0,
+            'cross_file': cross_file,
+            'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'error': str(e)
+        }
 
 def run_automation(path_automation: str, num_questions: int = 80) -> None:
     """
@@ -188,6 +207,9 @@ def run_automation(path_automation: str, num_questions: int = 80) -> None:
     clean_temp_dir(temp_dir)
     temp_dir.mkdir(exist_ok=True)
     
+    # Lista para coletar dados de tentativas
+    attempts_data = []
+    
     if not attack_dir.exists():
         raise FileNotFoundError(f"Diretório de arquivos de ataque não encontrado: {attack_dir}")
     
@@ -200,7 +222,8 @@ def run_automation(path_automation: str, num_questions: int = 80) -> None:
                 file_path = attack_dir / folder_name / file_name
                                 
                 if file_path.exists():
-                    process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path)
+                    result = process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path)
+                    attempts_data.append(result)
                 else:   
                     print(f"Arquivo não encontrado: {file_path}")
         
@@ -216,7 +239,8 @@ def run_automation(path_automation: str, num_questions: int = 80) -> None:
                 raise FileNotFoundError(f"Nenhum arquivo .py encontrado em {folder_path}")
             
             if file_path.exists():
-                process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path)
+                result = process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path)
+                attempts_data.append(result)
             else:
                 print(f"Arquivo não encontrado: {file_path}")
 
@@ -225,10 +249,40 @@ def run_automation(path_automation: str, num_questions: int = 80) -> None:
             folder_path = attack_dir / folder_name 
             file_path = attack_dir / folder_name / "file1.py"
 
-            process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path, cross_file=True)
+            result = process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path, cross_file=True)
+            attempts_data.append(result)
             
     finally:
         clean_temp_dir(temp_dir)
+        
+        # Salva os dados de tentativas em Excel
+        if attempts_data:
+            df = pd.DataFrame(attempts_data)
+            
+            # Cria nome do arquivo com timestamp
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            excel_filename = f"completion_attempts_report_{timestamp}.xlsx"
+            excel_path = Path("attacks_excels") / excel_filename
+            
+            # Cria o diretório se não existir
+            excel_path.parent.mkdir(exist_ok=True)
+            
+            # Filtra apenas arquivos que precisaram de mais de uma tentativa
+            multiple_attempts_df = df[df['attempts_used'] > 1].copy()
+            
+            # Salva ambos os relatórios
+            with pd.ExcelWriter(str(excel_path)) as writer:
+                df.to_excel(writer, sheet_name='Todos_os_Arquivos', index=False)
+                multiple_attempts_df.to_excel(writer, sheet_name='Multiplas_Tentativas', index=False)
+            
+            print(f"\nRelatório de tentativas salvo em: {excel_path}")
+            print(f"Total de arquivos processados: {len(df)}")
+            print(f"Arquivos que precisaram de múltiplas tentativas: {len(multiple_attempts_df)}")
+            
+            if len(multiple_attempts_df) > 0:
+                print("\nArquivos que precisaram de múltiplas tentativas:")
+                for _, row in multiple_attempts_df.iterrows():
+                    print(f"  - {row['file_path']}: {row['attempts_used']} tentativas")
     
     print("Automação finalizada com sucesso!")
 
