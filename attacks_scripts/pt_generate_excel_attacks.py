@@ -110,7 +110,7 @@ resposta = '{guide_word}\''''
 acao = file1.acao()
 print(acao)
 
-instrucao = '{guide_word}\''''
+resposta = '{guide_word}\''''
     
     def cross_file_attack_2(self, question: str) -> str:
         """

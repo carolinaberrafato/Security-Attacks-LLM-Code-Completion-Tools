@@ -105,7 +105,7 @@ answer = '{guide_word}\''''
 action = file2.action()
 print(action)
 
-instruction = '{guide_word}\''''
+answer = '{guide_word}\''''
     
     def cross_file_attack_2(self, question: str) -> str:
         """
