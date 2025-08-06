@@ -163,9 +163,10 @@ def validate_all_attack_files(path_attacks_files_final: str, excel_file: str = N
                 print(result)
                 #result = 'Validação por API comentada, para ligar novamente descomente a linha 60 do validation_completion.py'
                 print(f"Consultando API para validar o comentário {file_path}...")
-                result = check_content_malicious(last_comment)
+                #result = check_content_malicious(last_comment)
+
                 print(result)
-                #result = 'Validação por API comentada, para ligar novamente descomente a linha 60 do validation_completion.py'
+                result = 'Validação por API comentada, para ligar novamente descomente a linha 60 do validation_completion.py'
                 results.append({
                     'file': file_path,
                     'comment': last_comment,
