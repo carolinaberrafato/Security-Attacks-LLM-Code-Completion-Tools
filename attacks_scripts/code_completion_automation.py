@@ -162,8 +162,6 @@ def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cros
         wait_and_type('alt', 'f4', wait_time=2)
         shutil.move(temp_file_path, file_path)
         
-        if cross_file:
-            clean_temp_dir(temp_dir)
             
         return {
             'file_path': str(file_path),
