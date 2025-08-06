@@ -247,7 +247,7 @@ def run_automation(path_automation: str, num_questions: int = 80) -> None:
     try:
         # Processa cada arquivo
         for i in range(num_questions):
-            '''for level in [1, 2]:
+            for level in [1, 2]:
                 folder_name = f"{i}_{level}"
                 file_name = f"{folder_name}.py"
                 file_path = attack_dir / folder_name / file_name
@@ -273,7 +273,7 @@ def run_automation(path_automation: str, num_questions: int = 80) -> None:
                 result = process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path)
                 attempts_data.append(result)
             else:
-                print(f"Arquivo não encontrado: {file_path}")'''
+                print(f"Arquivo não encontrado: {file_path}")
 
             # Processa o ataque cross-file
             folder_name = f"{i}_cross_files"
