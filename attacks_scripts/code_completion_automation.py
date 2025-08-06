@@ -147,7 +147,7 @@ def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cros
             processo_cursor = subprocess.Popen([str(cursor_path), parent_absolute_path])
             time.sleep(0.5)
             wait_and_type('ctrl', 'alt', 'b')
-            time.sleep(0.1)
+
 
         # Abre o arquivo no editor
         wait_and_type('ctrl', 'p', wait_time=0.5)
