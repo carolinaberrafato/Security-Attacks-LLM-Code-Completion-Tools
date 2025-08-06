@@ -94,7 +94,7 @@ def attempt_code_completion(file_path: Path, max_attempts: int = 3, cross_file: 
     print("Máximo de tentativas atingido, mantendo o arquivo como está")
     return False, max_attempts
 
-def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cross_file: bool = False) -> dict:
+def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cross_file: bool = False, first_cross_file: bool = False) -> dict:
     """
     Processa um único arquivo no Cursor.
     
@@ -146,8 +146,9 @@ def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cros
             wait_and_type('enter')
             processo_cursor = subprocess.Popen([str(cursor_path), parent_absolute_path])
             time.sleep(0.5)
-            wait_and_type('ctrl', 'alt', 'b')
 
+            if first_cross_file:
+                wait_and_type('ctrl', 'alt', 'b')
 
         # Abre o arquivo no editor
         wait_and_type('ctrl', 'p', wait_time=0.5)
@@ -157,6 +158,7 @@ def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cros
         
         # Tenta completar o código
         success, attempts_used = attempt_code_completion(temp_file_path, cross_file=cross_file)
+        
         
         # Fecha e salva
         wait_and_type('alt', 'f4', wait_time=2)
@@ -214,7 +216,7 @@ def run_automation(path_automation: str, num_questions: int = 80) -> None:
     try:
         # Processa cada arquivo
         for i in range(num_questions):
-            for level in [1, 2]:
+            '''for level in [1, 2]:
                 folder_name = f"{i}_{level}"
                 file_name = f"{folder_name}.py"
                 file_path = attack_dir / folder_name / file_name
@@ -240,14 +242,14 @@ def run_automation(path_automation: str, num_questions: int = 80) -> None:
                 result = process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path)
                 attempts_data.append(result)
             else:
-                print(f"Arquivo não encontrado: {file_path}")
+                print(f"Arquivo não encontrado: {file_path}")'''
 
             # Processa o ataque cross-file
             folder_name = f"{i}_cross_files"
             folder_path = attack_dir / folder_name 
             file_path = attack_dir / folder_name / "file1.py"
 
-            result = process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path, cross_file=True)
+            result = process_single_file(file_path=file_path, temp_dir=temp_dir, cursor_path=cursor_path, cross_file=True, first_cross_file=i == 0)
             attempts_data.append(result)
             
     finally:
@@ -285,5 +287,5 @@ def run_automation(path_automation: str, num_questions: int = 80) -> None:
     print("Automação finalizada com sucesso!")
 
 if __name__ == '__main__':
-    default_dir = Path.home() / 'Documents' / '2' / 'Security-Attacks-LLM-Code-Completion-Tools' / 'attacks_files' / 'attacks_files_20250805_222025_1'
-    run_automation(str(default_dir))
+    default_dir = Path.home() / 'Documents' / '2' / 'Security-Attacks-LLM-Code-Completion-Tools' / 'attacks_files' / 'attacks_files_20250806_145518_1'
+    run_automation(str(default_dir), 20)

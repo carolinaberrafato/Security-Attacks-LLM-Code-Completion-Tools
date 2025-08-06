@@ -209,7 +209,7 @@ def main():
         
         # Salvar resultados
         print("\nSalvando resultados em Excel...")
-        excel_file = generator.save_results(results_df)
+        excel_file = generator.save_results(results_df, timestamp)
         
         print(f"\nResultados salvos com sucesso em: {excel_file}")
         

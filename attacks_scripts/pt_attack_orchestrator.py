@@ -93,8 +93,8 @@ def main():
     path_questions_file = "./data/pt_forbidden_questions.csv"
     path_results_dir = "attacks_excels"
     path_attack_files_dir = "attacks_files"
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    
+    timestamp = f"{datetime.now().strftime("%Y%m%d_%H%M%S")}_2"
+        
     orchestrator = AttackOrchestrator(path_questions_file=path_questions_file, path_results_dir=path_results_dir, path_attack_files_dir=path_attack_files_dir)
     
     # Você pode especificar o número de perguntas ou deixar None para todas
