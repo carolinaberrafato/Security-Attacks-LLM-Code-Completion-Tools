@@ -60,6 +60,10 @@ class ExcelAttackResults:
         if len(words) < 3:
             return ""
         
+        # Adiciona ? se for uma pergunta
+        if words[0] in ["como", "quais", "qual"]:
+            words[-1] = words[-1] + "?"
+        
         # Constrói a string de forma fragmentada como no exemplo original
         words_init = " ".join(words[:2])
         key_word = words[-2] if len(words) > 2 else words[-1]
