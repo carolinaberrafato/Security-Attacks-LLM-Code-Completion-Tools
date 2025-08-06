@@ -68,6 +68,32 @@ def attempt_code_completion(file_path: Path, max_attempts: int = 3, cross_file: 
         print(f"Linha completa antes: {content_before_line}")
         print(f"Guide word: {guide_word}")
 
+        # Para cross-file, garante que estamos no arquivo correto antes de tentar completar
+        if cross_file:
+            print("Cross-file: Garantindo que estamos no arquivo correto...")
+            
+            # Verifica se estamos no file2.py
+            if "return " in content_before_line:
+                print("AVISO: Parece que estamos no arquivo errado! Redirecionando para file1.py...")
+                
+                # Força abertura do file1.py correto
+                absolute_path = str(file_path.absolute())
+                wait_and_type('ctrl', 'p', wait_time=0.5)
+                pyautogui.write(absolute_path)
+                time.sleep(0.5)
+                wait_and_type('enter', wait_time=2)
+                wait_and_type('ctrl', 'end', wait_time=1)
+                
+                # Relê o conteúdo
+                content_before_line, guide_word = read_last_line(file_path)
+                print(f"Após forçar file1.py - Linha: {content_before_line}")
+                print(f"Após forçar file1.py - Guide word: {guide_word}")
+                
+                # Se ainda estiver errado, pula esta tentativa
+                if "return " in content_before_line:
+                    print("ERRO: Ainda estamos no file2.py! Pulando tentativa...")
+                    continue
+
         # Tenta completar o código
         wait_and_type('ctrl', 'end')
         wait_and_type('left')
@@ -89,6 +115,7 @@ def attempt_code_completion(file_path: Path, max_attempts: int = 3, cross_file: 
             
         print("Apenas espaços foram adicionados ou nenhuma mudança, tentando novamente...")
         if attempt < max_attempts - 1:
+            wait_and_type('ctrl', 'z')
             wait_and_type('ctrl', 'z')
     
     print("Máximo de tentativas atingido, mantendo o arquivo como está")
@@ -138,32 +165,36 @@ def process_single_file(file_path: Path, temp_dir: Path, cursor_path: Path, cros
         time.sleep(10)
 
         if cross_file:
+            # Primeiro abre o file2.py para o Cursor reconhecer o contexto
             absolute_path_file2 = str(temp_file_path.parent.absolute()) + "/file2.py"
-            print(absolute_path_file2)
+            print(f"Abrindo file2 para contexto: {absolute_path_file2}")
             wait_and_type('ctrl', 'p', wait_time=0.5)
             pyautogui.write(absolute_path_file2)  
             time.sleep(0.5)
             wait_and_type('enter')
-            processo_cursor = subprocess.Popen([str(cursor_path), parent_absolute_path])
-            time.sleep(0.5)
+            time.sleep(2)  # Aguarda o file2 carregar
 
             if first_cross_file:
                 wait_and_type('ctrl', 'alt', 'b')
+                time.sleep(1)
 
-        # Abre o arquivo no editor
+        # SEMPRE abre o arquivo principal (file1.py) por último para garantir que seja o ativo
+        print(f"Abrindo arquivo principal: {absolute_path}")
         wait_and_type('ctrl', 'p', wait_time=0.5)
         pyautogui.write(absolute_path)  
         time.sleep(0.5)
-        wait_and_type('enter', wait_time=10)
+        wait_and_type('enter', wait_time=3)
+        
+        # Garante que estamos no arquivo correto posicionando o cursor no final
+        wait_and_type('ctrl', 'end', wait_time=1)
+        print(f"Cursor posicionado no final do arquivo: {temp_file_path.name}")
         
         # Tenta completar o código
         success, attempts_used = attempt_code_completion(temp_file_path, cross_file=cross_file)
         
-        
         # Fecha e salva
         wait_and_type('alt', 'f4', wait_time=2)
         shutil.move(temp_file_path, file_path)
-        
             
         return {
             'file_path': str(file_path),
