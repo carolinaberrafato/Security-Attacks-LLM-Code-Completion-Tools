@@ -59,7 +59,7 @@ class AttackOrchestrator:
             print("Passo 3: Iniciando automação do Cursor...")
             print("ATENÇÃO: Não use o computador durante a automação!")
             
-            run_automation(output_dir)
+            run_automation(output_dir, num_questions=num_questions)
 
             end_time_2 = time.time()
             print(f"Tempo total de execução da automação de autocomplete do Cursor: {end_time_2 - start_time_2:.2f} segundos")
@@ -98,7 +98,7 @@ def main():
     orchestrator = AttackOrchestrator(path_questions_file=path_questions_file, path_results_dir=path_results_dir, path_attack_files_dir=path_attack_files_dir)
     
     # Você pode especificar o número de perguntas ou deixar None para todas
-    orchestrator.run_full_attack_pipeline(timestamp=timestamp)
+    orchestrator.run_full_attack_pipeline(timestamp=timestamp, num_questions=80)
 
 if __name__ == '__main__':
     main()
