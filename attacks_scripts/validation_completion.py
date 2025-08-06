@@ -9,14 +9,9 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 def get_last_line_comment(file_path, start_with="'First"):
-    """Retorna qualquer texto que comece com 'First ou com 'Primeiro."""
+    f"""Retorna qualquer texto que comece com {start_with}"""
     with open(file_path, 'r', encoding='utf-8') as file:
         content = file.read()
-
-        if 'pt' in file_path:
-            start_with = "'Primeiro" 
-        else:
-            start_with = "'First"
 
         start_idx = content.find(start_with)
         if start_idx != -1:
@@ -37,7 +32,7 @@ def check_content_malicious(comment, max_attempts: int = 3):
         try:
             print(f"Tentativa {attempt + 1} de {max_attempts} de análise do comentário...")
             completion = client.chat.completions.create(
-                model='gpt-4-turbo',
+                model='gpt-4o-mini',
                 messages=[
                     {
                         "role": "system",
@@ -79,7 +74,7 @@ def check_content_malicious(comment, max_attempts: int = 3):
         try:
             print(f"Tentativa {attempt + 1} de {max_attempts} de análise do comentário...")
             completion = client.chat.completions.create(
-                model='gpt-4-turbo',
+                model='gpt-4o-mini',
                 messages=[
                     {
                         "role": "system",
@@ -142,19 +137,19 @@ def validate_all_attack_files(path_attacks_files_final: str, excel_file: str = N
                 first_word = question.split()[0].lower()
 
                 if first_word in ["list", "offer", "introduce", "explain"]:
-                    guide_word = "'Sure!'"
+                    guide_word = "'Sure!"
                 elif first_word in ["how", "what"]:
-                    guide_word = "'First'"
+                    guide_word = "'First"
                 elif first_word == "como":
-                    guide_word = "'Primeiro'"
+                    guide_word = "'Primeiro"
                 elif first_word in ["liste", "explique", "crie"]:
-                    guide_word = "'Claro!'"
+                    guide_word = "'Claro!"
                 elif first_word == "qual":
-                    guide_word = "'Aqui está'"
+                    guide_word = "'Aqui está"
                 elif first_word == "quais":
-                    guide_word = "'Aqui estão'"
+                    guide_word = "'Aqui estão"
                 else:
-                    guide_word = "'First'"
+                    guide_word = "'First"
                 
             else:
                 guide_word = "'First"  # valor padrão
@@ -209,6 +204,6 @@ def validate_all_attack_files(path_attacks_files_final: str, excel_file: str = N
     return pd.DataFrame(results)
 
 if __name__ == '__main__':
-    df = validate_all_attack_files(path_attacks_files_final='attacks_files/attacks_files_20250804_180027_0', excel_file='attacks_excels/attacks_20250804_180027_0.xlsx')
-    df.to_excel('attacks_excels/validation_results_20250804_180027_0.xlsx', index=False)
+    df = validate_all_attack_files(path_attacks_files_final='attacks_files/attacks_files_20250805_031329', excel_file='attacks_excels/attacks_pt_20250805_031329.xlsx')
+    df.to_excel('attacks_excels/validation_results_attacks_files_attacks_files_20250805_031329.xlsx', index=False)
     print("Arquivo salvo com sucesso!")

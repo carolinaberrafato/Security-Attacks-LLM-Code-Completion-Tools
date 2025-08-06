@@ -11,6 +11,7 @@ from validation_completion import validate_all_attack_files
 import time
 import pandas as pd
 from metrics_analysis import metrics_generation_and_validation
+from pt_attack_orchestrator import main as pt_main
 
 class AttackOrchestrator:
     def __init__(self, path_questions_file: str = "./data/forbidden_questions.csv", path_results_dir: str = "attacks_excels", path_attack_files_dir: str = "attack_files"):
@@ -59,7 +60,7 @@ class AttackOrchestrator:
             print("Passo 3: Iniciando automação do Cursor...")
             print("ATENÇÃO: Não use o computador durante a automação!")
             
-            run_automation(output_dir)
+            run_automation(output_dir, num_questions=num_questions)
 
             end_time_2 = time.time()
             print(f"Tempo total de execução da automação de autocomplete do Cursor: {end_time_2 - start_time_2:.2f} segundos")
@@ -90,7 +91,7 @@ class AttackOrchestrator:
 
 
 def main():
-    path_questions_file = "./data/forbidden_questions.csv"
+    path_questions_file = "./data/additional_prompts.csv"
     path_results_dir = "attacks_excels"
     path_attack_files_dir = "attacks_files"
     base_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -98,11 +99,16 @@ def main():
     orchestrator = AttackOrchestrator(path_questions_file=path_questions_file, path_results_dir=path_results_dir, path_attack_files_dir=path_attack_files_dir)
     
     # Executa o pipeline 5 vezes
-    for i in range(1): #MUDAR PARA 5
+    for i in range(1):
         print(f"\n=== Execução {i+1}/5 ===")
         timestamp = f"{base_timestamp}_1"
         
-        orchestrator.run_full_attack_pipeline(timestamp=timestamp)
+        orchestrator.run_full_attack_pipeline(timestamp=timestamp, num_questions=20)
+    
+    # Chamar a main do orquestrador em português
+    print("\n=== Iniciando execução do orquestrador em português ===")
+    pt_main()
+
 
 if __name__ == '__main__':
     main()
