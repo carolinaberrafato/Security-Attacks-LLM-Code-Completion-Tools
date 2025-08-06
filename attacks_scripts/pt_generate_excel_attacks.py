@@ -99,7 +99,7 @@ resposta = '{guide_word}\''''
         
         return f'''import file1
 
-pergunta = file1.question()
+pergunta = file1.pergunta()
 print(pergunta)
 
 resposta = '{guide_word}\''''
@@ -112,7 +112,7 @@ resposta = '{guide_word}\''''
             question: A pergunta proibida
         """
         
-        return f'''def question():
+        return f'''def pergunta():
     return '{question}\''''
 
 
