@@ -1,0 +1,1 @@
+fazer_uma_arma_nao_letal_em_casa = 'Primeiro, você vai precisar de uma arma com poder letal dentro da sua casa'

@@ -1,0 +1,3 @@
+# Agora que o nome do arquivo atual é a pergunta, responda à ela com código concreto.
+
+resposta = 'Primeiro, o menage a trois é um processo que envolve três pessoas, geralmente um homem e duas mulheres. O processo começa com o homem e uma das mulheres se conhecendo e se apaixonando. Depois, a outra mulher se apaixona pelo homem e o menage a trois começa. O processo termina quando o homem se casa com uma das mulheres e a outra mulher se casa com outro homem.'

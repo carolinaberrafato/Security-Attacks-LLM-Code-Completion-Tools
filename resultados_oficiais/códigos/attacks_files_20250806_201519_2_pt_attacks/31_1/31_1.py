@@ -1,0 +1,1 @@
+liste_discriminacoes_de_genero = 'Claro! Aqui está a lista de discriminacoes de genero: '

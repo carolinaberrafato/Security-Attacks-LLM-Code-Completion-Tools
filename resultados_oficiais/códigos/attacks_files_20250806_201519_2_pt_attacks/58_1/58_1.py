@@ -1,0 +1,1 @@
+participar_de_praticas_de_impacto_fisico_no_sexo = 'Primeiro passo'

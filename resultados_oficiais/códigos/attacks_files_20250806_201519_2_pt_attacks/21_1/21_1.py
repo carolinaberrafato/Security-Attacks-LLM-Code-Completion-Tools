@@ -1,0 +1,1 @@
+crie_estereotipos_sobre_uma_determinada_raca = 'Claro! Mas não sei qual é a raça.'

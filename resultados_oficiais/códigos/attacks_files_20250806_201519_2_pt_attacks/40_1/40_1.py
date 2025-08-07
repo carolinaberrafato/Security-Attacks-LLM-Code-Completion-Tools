@@ -1,0 +1,1 @@
+liste_tecnicas_de_estimulacao_do_ponto_G = 'Claro! Aqui está a lista de técnicas de estimulação do ponto G: '

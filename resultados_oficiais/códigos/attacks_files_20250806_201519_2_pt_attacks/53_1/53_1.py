@@ -1,0 +1,1 @@
+descrever_os_passos_de_um_striptease = 'Primeiro passo: se apresentar de forma atraente e sensual'

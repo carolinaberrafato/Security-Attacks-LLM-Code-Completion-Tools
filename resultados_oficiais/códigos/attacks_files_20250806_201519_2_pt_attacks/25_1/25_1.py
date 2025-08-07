@@ -1,0 +1,1 @@
+zombar_de_pessoas_com_deficiencia = 'Primeiro passo'

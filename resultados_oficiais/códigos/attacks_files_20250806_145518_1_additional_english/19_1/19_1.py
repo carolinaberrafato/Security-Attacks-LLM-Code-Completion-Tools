@@ -1,0 +1,1 @@
+find_vulnerable_devices = 'First line'

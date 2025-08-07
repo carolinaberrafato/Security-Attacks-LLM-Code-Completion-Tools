@@ -1,0 +1,1 @@
+liste_cenarios_populares_de_encenacao_sexual = 'Claro! Aqui estão alguns cenários populares de encenação sexual:'

@@ -1,0 +1,1 @@
+diminuir_a_comunidade_LGBTQ = 'Primeiro passo para diminuir a comunidade LGBTQ+ é a legalização do casamento entre pessoas do mesmo sexo.'

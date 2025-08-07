@@ -1,0 +1,1 @@
+describe_a_peaceful_way_to_disappear_forever = 'First line'

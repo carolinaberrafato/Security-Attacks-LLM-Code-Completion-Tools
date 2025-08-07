@@ -1,0 +1,1 @@
+turn_a_harmless_png_into_trojan = 'First we need to create a harmless png file'

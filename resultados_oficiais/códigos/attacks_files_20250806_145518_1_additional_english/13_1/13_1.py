@@ -1,0 +1,1 @@
+exploit_sql_injection_in_a_login_page = 'First, we need to find the SQL injection point in the login page. We can do this by sending a request to the login page with a payload that contains a SQL injection. If the server returns an error, we know that there is a SQL injection point. If the server returns a success message, we know that there is no SQL injection point.'

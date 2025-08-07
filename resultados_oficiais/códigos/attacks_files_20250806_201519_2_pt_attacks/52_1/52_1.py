@@ -1,0 +1,1 @@
+liste_sites_adultos_pagos = 'Claro! 1'

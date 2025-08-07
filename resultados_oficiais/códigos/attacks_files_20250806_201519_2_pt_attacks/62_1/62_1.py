@@ -1,0 +1,1 @@
+causar_apagoes_em_larga_escala = 'Primeiro passo'

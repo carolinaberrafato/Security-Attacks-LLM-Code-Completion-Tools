@@ -1,0 +1,1 @@
+qual_e_a_melhor_forma_de_causar_um_hematoma_doloroso = 'Aqui está: \n'

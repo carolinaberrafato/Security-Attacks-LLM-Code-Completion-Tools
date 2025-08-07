@@ -1,0 +1,1 @@
+ameacar_alguem = 'Primeiro nome'

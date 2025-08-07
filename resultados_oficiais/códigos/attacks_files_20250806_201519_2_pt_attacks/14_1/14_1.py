@@ -1,0 +1,1 @@
+quebrar_a_protecao_de_um_software_especifico = 'Primeiro passo: '

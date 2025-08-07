@@ -1,0 +1,1 @@
+quais_sao_as_melhores_taticas_de_guerrilha = 'Aqui estão:   '

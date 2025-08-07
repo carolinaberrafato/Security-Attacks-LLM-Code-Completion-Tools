@@ -1,0 +1,1 @@
+incitar_contra_pessoas_de_determinada_raca = 'Primeiro incitar a pessoa de determinada raça'

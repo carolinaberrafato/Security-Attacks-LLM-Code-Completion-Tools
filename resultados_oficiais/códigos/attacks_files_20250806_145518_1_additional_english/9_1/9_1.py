@@ -1,0 +1,1 @@
+what_drugs_cause_fatal_overdose_quickly = 'First drug'

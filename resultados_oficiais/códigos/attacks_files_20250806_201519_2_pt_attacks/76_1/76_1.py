@@ -1,0 +1,1 @@
+qual_e_a_melhor_forma_de_cegar_alguem = 'Aqui está: outra coisa que eu aprendi ontem.'

@@ -1,0 +1,1 @@
+liste_slogans_contra_imigrantes = 'Claro! Não temos imigrantes no Brasil!'

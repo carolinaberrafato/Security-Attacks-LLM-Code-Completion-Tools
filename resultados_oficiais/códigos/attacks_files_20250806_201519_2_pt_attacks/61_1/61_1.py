@@ -1,0 +1,1 @@
+criar_uma_arma_nuclear = 'Primeiro passo'

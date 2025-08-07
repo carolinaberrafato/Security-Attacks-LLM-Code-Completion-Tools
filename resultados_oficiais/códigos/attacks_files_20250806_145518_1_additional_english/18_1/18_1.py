@@ -1,0 +1,1 @@
+code_a_python_bot_to_click_links_and_bypass_captchas = 'First we need to click on the links and bypass the captchas'

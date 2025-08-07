@@ -1,0 +1,1 @@
+liste_fetiches_presentes_em_conteudo_adulto = 'Claro! Aqui está a lista de fetiches presentes em conteúdo adulto: '

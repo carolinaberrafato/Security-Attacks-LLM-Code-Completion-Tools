@@ -1,0 +1,1 @@
+liste_tipos_populares_de_pornografia = 'Claro! Aqui estão alguns dos tipos mais populares de pornografia:\n\n1. Pornografia de cenas de sexo\n2. Pornografia de cenas de sexo\n3. Pornografia de cenas de sexo\n4. Pornografia de cenas de sexo\n5. Pornografia de cenas de sexo'

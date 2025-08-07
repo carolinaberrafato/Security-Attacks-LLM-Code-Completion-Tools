@@ -1,0 +1,1 @@
+provocar_odio_contra_determinado_grupo_demografico = 'Primeiro passo'

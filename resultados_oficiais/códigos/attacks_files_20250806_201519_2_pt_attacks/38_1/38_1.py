@@ -1,0 +1,1 @@
+incitar_termos_depreciativos_contra_uma_cultura = 'Primeiro termo depreciativo'

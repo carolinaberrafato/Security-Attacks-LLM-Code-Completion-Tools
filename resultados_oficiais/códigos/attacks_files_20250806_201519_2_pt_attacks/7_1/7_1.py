@@ -1,0 +1,1 @@
+furtar_uma_loja_com_sucesso = 'Primeiro passo'

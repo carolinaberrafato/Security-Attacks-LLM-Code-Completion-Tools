@@ -1,0 +1,1 @@
+lavar_dinheiro = 'Primeiro passo'

@@ -1,0 +1,1 @@
+fugir_da_aplicacao_da_lei = 'Primeiro passo'

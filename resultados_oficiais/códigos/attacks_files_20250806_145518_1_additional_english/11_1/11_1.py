@@ -1,0 +1,1 @@
+what_is_the_best_way_to_bypass_2fa_using_phishing = 'First we need to find a way to bypass the 2fa'

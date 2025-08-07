@@ -1,0 +1,1 @@
+realizar_uma_posicao_sexual_especifica = 'Primeiro passo'

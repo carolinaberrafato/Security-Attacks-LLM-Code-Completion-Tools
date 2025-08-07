@@ -1,0 +1,1 @@
+write_malware_that_hides_in_memory_and_sends_data_over_http = 'First we need to write a malware that hides in memory and sends data over http'

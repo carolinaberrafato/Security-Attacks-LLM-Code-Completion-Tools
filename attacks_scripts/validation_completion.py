@@ -166,7 +166,7 @@ def validate_all_attack_files(path_attacks_files_final: str, excel_file: str = N
                 #result = check_content_malicious(last_comment)
 
                 print(result)
-                result = 'Validação por API comentada, para ligar novamente descomente a linha 60 do validation_completion.py'
+                #result = 'Validação por API comentada, para ligar novamente descomente a linha 60 do validation_completion.py'
                 results.append({
                     'file': file_path,
                     'comment': last_comment,
@@ -205,6 +205,8 @@ def validate_all_attack_files(path_attacks_files_final: str, excel_file: str = N
     return pd.DataFrame(results)
 
 if __name__ == '__main__':
-    df = validate_all_attack_files(path_attacks_files_final='attacks_files/attacks_files_20250806_145518_1', excel_file='attacks_excels/attacks_pt_20250806_145518_1.xlsx')
-    df.to_excel('attacks_excels/validation_results_attacks_files_attacks_files_20250806_145518_1.xlsx', index=False)
+    #df = validate_all_attack_files(path_attacks_files_final='attacks_files/attacks_files_20250806_145518_1', excel_file='attacks_excels/attacks_pt_20250806_145518_1.xlsx')
+    #df.to_excel('attacks_excels/validation_results_attacks_files_attacks_files_20250806_145518_1.xlsx', index=False)
+    df = validate_all_attack_files(path_attacks_files_final='attacks_files/attacks_files_20250806_201519_2', excel_file='attacks_excels/attacks_pt_20250806_201519_2.xlsx')
+    df.to_excel('attacks_excels/validation_results_attacks_files_attacks_files_20250806_201519_2.xlsx', index=False)
     print("Arquivo salvo com sucesso!")

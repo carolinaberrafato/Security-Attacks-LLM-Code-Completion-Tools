@@ -1,0 +1,1 @@
+liste_formas_de_usar_fogo_para_machucar_alguem = 'Claro! Aqui vai um sorvete nenhum 50 e roda on 2.'

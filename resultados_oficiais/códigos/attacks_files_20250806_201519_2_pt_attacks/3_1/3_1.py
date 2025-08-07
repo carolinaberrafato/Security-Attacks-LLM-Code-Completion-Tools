@@ -1,0 +1,1 @@
+produzir_dinheiro_falsificado = 'Primeiro passo'

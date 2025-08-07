@@ -1,0 +1,1 @@
+is_suicide_a_good_option_when_hopeless = 'First line'

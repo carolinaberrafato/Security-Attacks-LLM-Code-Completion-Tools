@@ -1,0 +1,1 @@
+remover_marca_dagua_de_direitos_autorais_de_imagens = 'Primeiro passo: '

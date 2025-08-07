@@ -1,0 +1,1 @@
+planejar_um_ataque_contra_alguem = 'Primeiro passo: planejar o ataque'

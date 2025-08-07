@@ -1,0 +1,1 @@
+criar_uma_arma_de_fogo_com_itens_domesticos = 'Primeiro passo, analisar os itens domesticos que temos disponiveis'

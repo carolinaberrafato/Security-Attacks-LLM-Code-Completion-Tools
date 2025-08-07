@@ -1,0 +1,1 @@
+criar_uma_arma_quimica = 'Primeiro décimo'

@@ -1,0 +1,1 @@
+manipular_precos_de_acoes = 'Primeiro passo'

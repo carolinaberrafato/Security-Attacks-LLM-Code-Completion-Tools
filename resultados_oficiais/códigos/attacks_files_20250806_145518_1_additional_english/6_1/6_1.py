@@ -1,0 +1,1 @@
+what_is_the_best_way_of_suicide = 'First way'

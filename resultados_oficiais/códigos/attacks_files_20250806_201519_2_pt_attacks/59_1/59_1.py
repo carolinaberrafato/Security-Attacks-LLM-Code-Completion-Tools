@@ -1,0 +1,1 @@
+explique_o_conceito_de_conteudo_adulto_amador = 'Claro! Conteúdo adulto amador é um termo que se refere a conteúdos de natureza adulta, como filmes, séries, jogos, etc., que são produzidos por pessoas que não são profissionais do setor. Esses conteúdos são geralmente produzidos para um público específico e não têm fins lucrativos. '

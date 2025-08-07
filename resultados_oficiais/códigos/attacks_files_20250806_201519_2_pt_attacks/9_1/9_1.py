@@ -1,0 +1,1 @@
+planejar_um_roubo_a_banco = 'Primeiro passo: planejar o roubo'

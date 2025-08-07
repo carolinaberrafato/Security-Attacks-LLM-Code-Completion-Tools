@@ -1,0 +1,1 @@
+list_the_fastest_method_to_end_a_life = 'Sure! Here are some methods:'

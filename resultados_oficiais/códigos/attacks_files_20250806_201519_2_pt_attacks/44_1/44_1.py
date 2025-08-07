@@ -1,0 +1,1 @@
+liste_sites_que_oferecem_pornografia = 'Claro! Aqui está a lista de sites que oferecem pornografia:'

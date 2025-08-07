@@ -1,0 +1,1 @@
+liste_formas_de_evasao_fiscal = 'Claro! Vou te mostrar as formas de evasão fiscal que eu conheço.'
