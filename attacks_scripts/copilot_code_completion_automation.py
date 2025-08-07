@@ -7,6 +7,7 @@ import shutil
 from typing import Optional
 import pandas as pd
 from datetime import datetime
+import pygetwindow as gw
 
 def clean_temp_dir(temp_dir: Path) -> None:
     """Limpa o diretório temporário se ele existir."""
@@ -67,13 +68,38 @@ def attempt_code_completion(file_path: Path, max_attempts: int = 3, cross_file: 
         content_before_line, guide_word = read_last_line(file_path)
         print(f"Linha completa antes: {content_before_line}")
         print(f"Guide word: {guide_word}")
+
+        if cross_file:
+            print("Cross-file: Garantindo que estamos no arquivo correto...")
+            
+            # Verifica se estamos no file2.py
+            if "return " in content_before_line:
+                print("AVISO: Parece que estamos no arquivo errado! Redirecionando para file1.py...")
+                
+                # Força abertura do file1.py correto
+                absolute_path = str(file_path.absolute())
+                wait_and_type('ctrl', 'p', wait_time=0.5)
+                pyautogui.write(absolute_path)
+                time.sleep(0.5)
+                wait_and_type('enter', wait_time=2)
+                wait_and_type('ctrl', 'end', wait_time=1)
+                
+                # Relê o conteúdo
+                content_before_line, guide_word = read_last_line(file_path)
+                print(f"Após forçar file1.py - Linha: {content_before_line}")
+                print(f"Após forçar file1.py - Guide word: {guide_word}")
+                
+                # Se ainda estiver errado, pula esta tentativa
+                if "return " in content_before_line:
+                    print("ERRO: Ainda estamos no file2.py! Pulando tentativa...")
+                    continue
         
         # Tenta completar o código
-        wait_and_type('ctrl', 'end')            # Vai até o final
-        wait_and_type('left')                   # Volta uma posição
-        wait_and_type('tab', wait_time=5)       # Solicita sugestão de código
-        wait_and_type('tab', wait_time=2)       # Aceita sugestão
-        pyautogui.hotkey('ctrl', 's')            # Salva
+        wait_and_type('ctrl', 'end')                # Vai até o final
+        wait_and_type('left')                       # Volta uma posição
+        wait_and_type('tab', wait_time=5)           # Solicita sugestão de código
+        wait_and_type('tab', wait_time=2)           # Aceita sugestão
+        wait_and_type('ctrl', 's', wait_time=3)     # Salva
         
         # Lê o conteúdo após a edição
         content_after_line, _ = read_last_line(file_path)
@@ -89,12 +115,14 @@ def attempt_code_completion(file_path: Path, max_attempts: int = 3, cross_file: 
             
         print("Apenas espaços foram adicionados, tentando novamente...")
         if attempt < max_attempts - 1:
-            pyautogui.hotkey('ctrl', 'z')
+            wait_and_type('ctrl', 'z')
+            wait_and_type('ctrl', 'z')
     
     print("Máximo de tentativas atingido, mantendo o arquivo como está")
+    wait_and_type('alt', 'f4', wait_time=2)
     return False
 
-def process_single_file(file_path: Path, temp_dir: Path, copilot_path: Path, cross_file: bool = False) -> dict:
+def process_single_file(file_path: Path, temp_dir: Path, copilot_path: Path, cross_file: bool = False, first_cross_file: bool = False) -> dict:
     """
     Processa um único arquivo no Copilot.
     
@@ -133,9 +161,9 @@ def process_single_file(file_path: Path, temp_dir: Path, copilot_path: Path, cro
             processo_copilot = subprocess.Popen([str(copilot_path), parent_absolute_path])
         else:
             processo_copilot = subprocess.Popen([str(copilot_path), '--new-window', absolute_path])
-                    
+                            
         print("Aguardando o editor carregar...")
-        time.sleep(10)
+        time.sleep(5)
 
         if cross_file:
             absolute_path_file2 = str(temp_file_path.parent.absolute()) + "/file2.py"
@@ -144,9 +172,11 @@ def process_single_file(file_path: Path, temp_dir: Path, copilot_path: Path, cro
             pyautogui.write(absolute_path_file2)  
             time.sleep(0.5)
             wait_and_type('enter')
-            processo_copilot = subprocess.Popen([str(copilot_path), parent_absolute_path])
-            time.sleep(0.5)
-            wait_and_type('ctrl', 'alt', 'b')
+            time.sleep(2)
+
+            if first_cross_file:
+                wait_and_type('ctrl', 'alt', 'b')
+                time.sleep(1)
 
         # Abre o arquivo no editor
         wait_and_type('ctrl', 'p', wait_time=0.5)
@@ -158,7 +188,6 @@ def process_single_file(file_path: Path, temp_dir: Path, copilot_path: Path, cro
         success, attempts_used = attempt_code_completion(temp_file_path, cross_file=cross_file)
         
         # Fecha e salva
-        time.sleep(2)
         wait_and_type('alt', 'f4', wait_time=2)
         shutil.move(temp_file_path, file_path)
 
